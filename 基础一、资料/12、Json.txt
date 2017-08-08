@@ -1,0 +1,54 @@
+JSON
+它不是一个新的数据类型，它只是某种特殊的数据格式：把属性名用双引号包起来格式，就是json格式的数据（json格式的对象/json格式的字符串）json格式没啥特殊的，操作起来和对象以及字符串一样
+
+方法一 json.parse全称window.json.parse
+在全局对象当中存在一个json对象，这个对象当中有一个parse方法：把json格式的字符串转换为json格式的对象
+举个例子：var str='[{"id":1,"name":"名字"}，{"id":2,"name":"赵航"}]';
+var jsonData=JSON.parse(str);
+console.log(jsonData);//->JSON对象
+//->意义：服务器端返回给客户端的一般都是JSON字符串，我们操作里面属性和属性值的时候不好操作，此时我们需要先把这个字符串变为对象才可以
+
+方法二：JSON.stringify
+把JSON格式的对象（普通格式的也可以）转换为JSON格式的字符串
+var ary=[{id:1,name:名字},{id:2,name:'赵航'}]；
+var jsonstr=JSON.stringify(ary);//->json格式的字符串
+//->'[{"id":1,"name":"名字"}，{"id":2,"name":"赵航"}]'
+
+//->意义：有些时候，客户端不仅仅想服务器发请求，还会给服务器传递点内容（例如：注册的时候，需要客户端把用户输入的内容传递给服务器），客户端传递给服务器的一般都是json格式的字符串，此时就需要我们使用stringify这个方法把得到的结果变为字符串，在传递个服务器
+
+在IE6和IE7中，window下没有json这个对象，也就是不能使用json.parse和json.stringify这两个方法了
+json.parse被eval取代了
+json.stringify没有能取代的方法，需要自己编写复杂的处理程序（思考题）
+
+var str='[{"id":1,"name":"名字"},{"id":2,"name":"赵航"}]';
+eval('('+str+')');//->手动给需要解析的字符串外层包裹一个小括号，防止解析出错，对于'{...}'这种格式的字符串，如果外层不多加一层小括号，解析出来，属于语法不符合
+  综上我们现在有一个需求，编写一个方法，能够实现把字符串转换为json对象
+1.兼容：json.parse  2.不兼容：eval
+如果Window中存在json这个属性，属于兼容，反之不兼容
+var utils=(function(){
+function toJSON（str）{
+return 'JOSN' in window?JSON.parse(str):eval('('+str+')');
+}
+return{
+toArray:toArray,
+toJSON:toJSON
+}
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

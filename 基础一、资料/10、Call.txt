@@ -1,0 +1,22 @@
+Call/apply/bind
+ 属性Function.prototype上定义的三个方法，所有的函数数据类型值都可以调取这三个方法
+三个方法都是用来改变一个函数中的THIS关键字指向的(BIND不兼容IE6~8，其余两个方法兼容所有的浏览器)
+
+call的作用：
+把需要造作的函数中的this变为第一个实参的值
+num.call（obj，10,20）把this改成第一个传递的值，后面是传参！立马执行该函数！
+{非严格模式下}
+第一个实参为空过着写null或者undefined，this都是Window，剩下的第一个实参是谁，this就是谁
+{严格模式下}
+第一个实参为空，this是undefined，其余的写谁this就是谁
+改变为this后，把需要操作的函数执行即可
+
+
+apply:它的语法等同于call，唯一的区别在于apply在给操作的函数传递实参的时候，不是一个个传递的，而是放在一个数组中一起传递的（但是也相当于在一个个的传参）
+区别例子：sum.call（obj，10,20）;    sum.apply（obj，[10,20]);
+
+bind:它的语法跟call一样，但是作用不一样，bind只是提前把函数中的this改变了，但是并没有立即把函数执行，它属于预先改变this（柯理化函数思想）；call改变完立马把函数执行，bind只改变但不执行；
+var obj2={name:'张三'};
+funcitonfn（）{
+}
+Window.setInterval(fn,1000);每隔一秒执行一次fn

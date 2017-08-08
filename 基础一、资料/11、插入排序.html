@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>插入排序</title>
+</head>
+<body>
+<script>
+    function insertSort(ary) {
+        var handAry = [];
+        handAry.push(ary[0]);
+        for (var i = 1; i < ary.length; i++) {
+            var cur = ary[i];
+            for (var j = handAry.length - 1; j >= 0; j--) {
+                var curHand = handAry[j];
+                if (curHand < cur) {
+                    handAry.splice(j + 1, 0, cur);
+                    j = -1;
+                }
+                if (j === 0) {
+                    handAry.unshift(cur);
+                }
+            }
+        }
+
+        return handAry;
+    }
+
+
+    var ary = [12, 24, 2, 15, 34, 17, 3, 18, 25, 0];
+    var result = insertSort(ary);
+    console.log(result);
+</script>
+</body>
+</html>

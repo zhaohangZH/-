@@ -1,0 +1,24 @@
+函数的三种角色
+1、普通函数
+私有作用域，形参赋值、变量提升、代码执行、返回值、arguments、、栈内存的销毁不销毁、作用域的链...
+2、类
+实例、类、instanceof、constructor、prototype、__proto__、原型链...
+3、普通对象
+就把他当做一个普通的obj即可，有自己的属性名和属性值...
+=>name：‘函数名’
+=>length：‘形参的个数’
+=>prototype
+=>__proto__
+=>...
+【三种角色之间没有必然的关系】
+function Fn(num) {
+    this.x = this.y = num;
+}
+Fn.prototype = {
+   constructor:Fn,
+    x: 20,
+    sum: function () {
+        console.log(this.x + this.y);
+    }
+};
+var f = new Fn(10);

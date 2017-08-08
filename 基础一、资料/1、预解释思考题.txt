@@ -1,0 +1,134 @@
+/*
+     * 变量提升:没有
+     */
+    f = function () {return true;}; //->window.f
+    g = function () {return false;} //->window.g
+    ;(function () {
+        //->私有作用域
+        //形参赋值：
+        //变量提升：g = xxxfff000 ->TRUE  G是当前私有的变量,和全局的没有任何的关系
+        if(g()&&[]==![]){
+            //->G():TRUE
+            //->[]==![] []==false 0==0:TRUE
+            f = function f() {return false;}; //->自己家里没有F,我们在此操作的F都是外面的(全局的) =>window.f FALSE
+        }
+        function g() {return true;}
+    })();
+    console.log(f());//->false
+    console.log(g());//->false
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//->在变量提升阶段，如果当前这个名字已经声明过了，则不再重新的声明，只需要重新的定义赋值即可 (变量名和函数名如果相同也算是重复)
+    fn();
+    function fn() {console.log(1);}
+    fn();
+    function fn() {console.log(2);}
+    fn();
+    var fn=13;
+    fn();
+    function fn() {console.log(3);}
+    fn();
+    function fn() {console.log(4);}
+    fn();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+console.log(a, b, c);
+    var a = 12,
+          b = 13,
+           c = 14;
+    function fn(a) {
+        console.log(a, b, c);
+        a = 30;
+        var b = 10;
+        c = 20;
+        console.log(a, b, c);
+    }
+    fn(100);
+    console.log(a, b, c);
+
+undefined，undefined，undefined；
+100，undefined，14；
+30,10,20；
+12,13,20；
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var a=100;
+    function num() {
+        var b=2*a;
+        var a=200;
+        var c=2/a;
+        alert(b);
+        alert(c);
+    }
+    num();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var a = 12;
+    var obj = {
+        a: 14,
+        fn: (function () {
+            var a = 13;
+            return function () {
+                console.log(a);
+            }
+        })()//->自执行函数是在给fn这个属性名赋值的时候就执行了,把执行的返回结果赋值给fn了
+    };
+    obj.fn();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+var num = 10;
+    var obj = {
+        num: 5,
+        fn: (function () {
+            this.num *= 2;
+            num *= 2;
+            var num = 3;
+
+            return function () {
+                this.num *= 2;
+                num *= 3;
+                console.log(num);
+            }
+        })()
+    };
+    var fn = obj.fn;
+    fn();
+    obj.fn();
+    console.log(num, obj.num);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var i = 12;
+    function fn() {
+        var i = 13;
+        return function (n) {
+            console.log(n + (++i));
+        }
+    }
+    var f = fn();
+    f(10);      24
+    fn()(10);   24
+    f(20);      25
+    fn()(20);   25
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var i = 12;
+    function fn() {
+        var i = 13;
+        return function (n) {
+            console.log(n + (++i));
+        }
+    }
+    var f = fn();
+    f(10);
+    fn()(10);
+    f(20);
+    fn()(20);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var num = 2;
+var obj = {num: 3};
+obj.fn = (function (num) {
+    this.num *= 2;
+    num *= 2;
+    return function () {
+        this.num *= 2;
+        num *= 3;
+        console.log(num);
+    }
+})(obj.num);//->把obj中num的属性值作为实参传递给自执行函数的形参num
+var fn = obj.fn;
+fn();
+obj.fn();
+console.log(num, obj.num);

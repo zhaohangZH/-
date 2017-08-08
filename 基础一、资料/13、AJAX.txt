@@ -1,0 +1,18 @@
+async JavaScript and xml我们可以通过AJAX想服务器发送请求，并且获取到服务器返回的内容
+
+//->创建AJAX对象
+var xhr=new XMLHttpRequest；
+//->打开一个请求的URL地址
+xhr.open（[请求方式]，[请求的URL地址]，[同步或者异步]）；
+//->xhr.open（'Get','xxx/xxx.json',false）;false代表的是同步编程：当从服务器端把数据获取到之后，才可以做别的事情
+//->监听AJAX的状态改变，接收服务器返回的结果
+xhr.onreadystatechange=function(){
+if(xhr.readyState===4&&xhr.status===200){
+//->从服务器获取数据成功
+xhr.responseText；}}
+//->向服务器发送请求
+xhr.send（null）；
+
+
+
+

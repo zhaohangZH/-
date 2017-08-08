@@ -1,0 +1,45 @@
+闭包的作用
+你了解过闭包么？（易车面试题）
+目前外界普遍认为“形成一个不销毁的私有作用域”才是闭包
+var fn=(function(){
+var n=12;
+return function(){
+console.log(++n);
+}
+})();
+闭包的第一个作用
+  保护里面的私有变量不受外界干扰（里面的变量和全局变量没关系，防止全局变量污染）
+例如：我们封装类库或者组件插件的时候，为了防止和全局变量冲突，我们都使用闭包把代码包裹起来（jquery就是这样处理的）
+闭包的第二个作用
+可以形成一个不销毁的
+
+
+
+
+this这个， 是执行这个方法的主体
+以下所有规律都是在非严格模式下生效的
+~function（）{
+console.log（this）；//->window
+}（）；
+
+
+//->给元素的事件绑定方法，当时间触发方法执行的时候，方法中的this是当前操作的元素
+oDiv.onclick=function（）{
+console.log（this）；
+}
+
+
+//->方法执行，看方法名前面是否有“点”，有“点”，“点”前面是谁，this就是谁，没有“点”，this就是window
+function fn（）{
+console.log（this）；
+}
+var obj={
+n：100，
+fn：fn
+}；//->this：Window
+obj.aa（）；//->this:obj
+
+
+
+
+

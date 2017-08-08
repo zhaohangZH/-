@@ -1,0 +1,33 @@
+
+this这个， 是执行这个方法的主体
+以下所有规律都是在非严格模式下生效的
+
+1、自执行函数中的THIS是WINDOW
+~function（）{
+console.log（this）；//->window
+}（）；
+
+
+//->2、给元素的事件绑定方法,当方法执行的时候,方法中的THIS是当前元素本身
+oDiv.onclick=function（）{
+console.log（this）；
+}
+
+
+//->3、方法执行，看方法名前面是否有“点”，有的，“点”前面是谁，this就是谁，没有“点”，this就是window
+function fn（）{
+console.log（this）；
+}
+var obj={
+n：100，
+fn：fn
+}；//->this：Window
+obj.aa（）；//->this:obj
+
+
+第四种方法：当做构造函数执行的时候，函数体中出现的this是当前类的一个实例
+
+第五种方法：可以使用call/apply/bind强制改变某一个方法中的this(这个规律的优先级最高)
+ var obj={};
+ function fn(num){}
+ document.body.onclick=fn.bind(obj,100); //->点击的时候执行fn，fn中的this:obj

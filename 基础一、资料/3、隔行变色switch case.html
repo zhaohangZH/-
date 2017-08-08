@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            font-size: 14px;
+            color: black;
+        }
+        ul{
+            list-style: none;
+        }
+        #ul1{
+            width:300px;
+            margin:50px auto;
+        }
+        #ul1 li{
+            border-bottom: 1px solid cornsilk;
+            line-height: 35px;
+        }
+        .bg1{
+            background: blue;
+        }
+        .bg2{
+            background: slateblue;
+        }
+    </style>
+</head>
+<body>
+<ul id="ul1">
+    <li>蓝色</li>
+    <li>紫色</li>
+    <li>蓝色</li>
+    <li>紫色</li>
+    <li>蓝色</li>
+    <li>紫色</li>
+    <li>蓝色</li>
+    <li>紫色</li>
+</ul>
+<script>
+    var oUl=document.getElementById('ul1');
+    var oLi=oUl.getElementsByTagName('li');
+    for (var i = 0; i < oLi.length; i++) {
+        var cer = oLi[i];
+        switch(i%2) {
+            case(0):
+                cer.className = 'bg1';
+                break;
+            default:
+                cer.className = 'bg2';
+        }
+    }
+</script>
+</body>
+</html>

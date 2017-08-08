@@ -1,0 +1,24 @@
+function fn1() {console.log(1);}
+function fn2() {console.log(2);}
+fn1.call(fn2);
+fn1.call.call.call.call(fn2);
+Function.prototype.call(fn1);
+Function.prototype.call.call.call.call(fn1);
+
+
+括号表达式
+一个括号中有多项，我们能够获取到的永远是最后一项的值
+function fn（）{console.log.（this）；}
+var obj={fn：fn，name：‘obj’}；
+（12,23）->23
+括号表达式中，如果有多项，我们获取到的最后一项如果只选的话，方法中的this是window
+
+
+var max=Math.max.apply（null，ary）；//->apply:虽然写的时候传递的是一个数组，但是也相当于在给max方法一个个传递参数；此处不需要操作this，所以this改为谁都无所谓；
+var min=Math.min.apply（null，ary）；
+console.log（max，min）；
+
+var obj=（function（）{
+
+}）
+（obj.fn）

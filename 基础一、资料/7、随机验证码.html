@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        color: #666;
+        font-size: 100px;
+    }
+    .codeBox{
+
+        text-align:center;
+        margin: auto;
+        width: 500px;
+        height: 300px;
+        line-height: 40px;
+        border: 2px solid black;
+    }
+</style>
+<body>
+<div class="codeBox" id="codeBox"></div>
+<script>
+ var CodeBox=document.getElementById('codeBox');
+    var codeArea='qwertyuiopasdfghjklzxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM0123456789';
+    function createRandom() {
+        var result='';
+        for (var i = 0; i <3; i++) {
+            var ran = Math.round(Math.random()*61);
+            result+=codeArea.charAt(ran);
+        }
+        CodeBox.innerHTML=result;
+    }
+    createRandom();
+    CodeBox.onmouseover=createRandom;
+ CodeBox.onmouseout=createRandom;
+</script>
+</body>
+</html>

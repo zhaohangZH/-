@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            font-size: 14px;
+            color: white;
+        }
+        ul{
+            list-style: none;
+        }
+        #ul1{
+            width:300px;
+            margin:20px auto;
+        }
+        #ul1 li{
+            list-style:35px;
+            border-bottom: 1px solid #999;
+        }
+        .bg1{
+            background: black;
+        }
+        .bg2{
+            background:chocolate;
+        }
+    </style>
+</head>
+<body>
+<ul id="ul1">
+    <li>黑色</li>
+    <li>棕色</li>
+    <li>黑色</li>
+    <li>棕色</li>
+    <li>黑色</li>
+    <li>棕色</li>
+    <li>黑色</li>
+    <li>棕色</li>
+</ul>
+<script>
+    var oUl=document.getElementById('ul1');
+    var oLi=oUl.getElementsByTagName('li');
+    for (var i = 0; i < oLi.length; i++) {
+        var cur = oLi[i];
+        cur.className=i%2===0?('bg1'):('bg2');
+    }
+</script>
+</body>
+</html>
