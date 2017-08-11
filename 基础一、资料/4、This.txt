@@ -15,14 +15,14 @@ console.log（this）；
 
 
 //->3、方法执行，看方法名前面是否有“点”，有的，“点”前面是谁，this就是谁，没有“点”，this就是window
-function fn（）{
-console.log（this）；
-}
-var obj={
-n：100，
-fn：fn
-}；//->this：Window
-obj.aa（）；//->this:obj
+function fn() {
+           console.log(this);
+      }
+        var obj = {
+           aa: fn
+       };
+       fn();//->this:window
+       obj.aa();//->this:obj
 
 
 第四种方法：当做构造函数执行的时候，函数体中出现的this是当前类的一个实例
