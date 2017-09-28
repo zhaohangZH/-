@@ -1,0 +1,6 @@
+load
+error
+scroll
+表单的一些事件行为：focus、blur没有冒泡传播的机制[chenge、key系列的行为，存在传播的机制]
+mouseenter和mouseleave不存在冒泡传播的机制
+chenge、key系列的行为，存在传播的机制

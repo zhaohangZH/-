@@ -1,0 +1,105 @@
+限定时间的匀速动画
+
+需求还是沿袭上面的需求，只不过规定从左边界到达右边界总时间需要1000MS
+
+//=>总时间1000MS D 
+//=>起始位置 B 
+//=>总距离：目标位置-起始位置 C 
+//=>已经走的时间 T
+
+限定时间的匀速动画：就是随时获取到当前元素的位置即可，让元素运动到这个位置，一直到总时间结束，就完成了动画
+
+T/D：已经走过的时间占总时间的百分比(我们已经走过百分之多少了)
+T/D*C：已经走过的百分比乘以总距离=已经走过的具体距离(我们已经走了多远)
+T/D*C+B：已经走过的距离+起始的位置=当前的位置(当前我们应该在哪)
+1.//->匀速动画公式：获取当前元素应有的位置
+2.//->t:time 已经走过的时间
+3.//->b:begin 当前元素起始位置
+4.//->c:change 要运动的总距离
+5.//->d:duration 动画的总时间
+6.function Linear(t,b,c,d){
+7.    return t / d * c + b;
+8.}
+1.var time = 0,
+2.    begin = utils.css(box, 'left'),
+3.    target = utils.win('clientWidth') - box.offsetWidth,
+4.    change = target - begin,
+5.    duration = 5000;
+6.box.timer = window.setInterval(function () {
+7.    time += 17;
+8.    //->当到达总时间的时候,结束动画
+9.    if (time >= duration) {
+10.        utils.css(box, 'left', target);
+11.        window.clearInterval(box.timer);
+12.        return;
+13.    }
+14.    //->获取当前元素的位置,并且让元素运动到这个位置
+15.    var curL = Linear(time, begin, change, duration);
+16.    utils.css(box, 'left', curL);
+17.}, 17);
+多方向匀速动画
+
+基于上面的需求，实现从左上角到右下角或者实现当前元素多方向匀速运动
+1.//=>封装一个动画库:实现当前元素限定时间内的多方向匀速运动
+2.~function () {
+3.    //=>匀速运动的动画公式
+4.    function Linear(t, b, c, d) {
+5.        return t / d * c + b;
+6.    }
+7.
+8.    //=>封装一个实现动画的方法
+9.    //->curEle：当前要实现运动的元素
+10.    //->target：要运动的目标位置 {xxx:xxx,xxx:xxx...}
+11.    //->duration：运动的总时间,不传递默认是1000MS
+12.    function animate(curEle, target, duration) {
+13.        //1、获取T/B/C/D
+14.        duration = duration || 1000;
+15.        var time = 0,
+16.            begin = {},
+17.            change = {};
+18.        for (var key in target) {
+19.            if (target.hasOwnProperty(key)) {
+20.                begin[key] = utils.css(curEle, key);
+21.                change[key] = target[key] - begin[key];
+22.            }
+23.        }
+24.
+25.        //2、实现动画
+26.        clearInterval(curEle.animateTimer);//->在设置新动画之前,把正在运行的其它动画都清除掉,防止多动画之间的冲突
+27.        curEle.animateTimer = setInterval(function () {
+28.            time += 17;
+29.            //->结束动画
+30.            if (time >= duration) {
+31.                utils.css(curEle, target);
+32.                clearInterval(curEle.animateTimer);
+33.                return;
+34.            }
+35.
+36.            //->通过匀速公式获取每个方向的当前位置,让元素运动到这个位置
+37.            var current = {};
+38.            for (var key in target) {
+39.                if (target.hasOwnProperty(key)) {
+40.                    current[key] = Linear(time, begin[key], change[key], duration);
+41.                }
+42.            }
+43.            utils.css(curEle, current);
+44.        }, 17);
+45.    }
+46.
+47.    //=>暴露到全局使用
+48.    window.zhufengAnimate = animate;
+49.}();
+50.
+51.zhufengAnimate(box, {
+52.    top: 300,
+53.    left: 500,
+54.    width: 10,
+55.    height: 10,
+56.    opacity: 0.2
+57.}, 5000);
+58.
+59.zhufengAnimate(box, {
+60.    width: 300,
+61.    height: 300,
+62.    opacity: 0.2
+63.}, 500);

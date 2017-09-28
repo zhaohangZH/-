@@ -1,0 +1,29 @@
+移动端的事件
+  移动端没有鼠标（mousexxx在移动端都不用）
+  移动端没有实体的键盘（keyxxx在移动端也用不了  input事件代替）
+1、click
+ click在pc端是点击（不管是点击一下还是快速点击两下，都是触发点击事件，快速点击两下属于双击也会触发两次click）
+ click在移动端是单击（手指快速点击两次触发的是双击，不是单击click）在移动端使用click的时候会有300ms延迟（因为：在第一次操作结束后，浏览器会等待300ms看是否有下一次操作，300ms内没有下一次的操作，属于单击，有下一次操作属于双击...）
+   
+   如果已经使用了click，如何解决300ms延迟：引入fastClick.min.js
+   <script src="fastClick.min.js"></script>
+<script>
+    FastClick.attach(document.body);//->把body总的所有click事件委托给FastClick处理
+</script> 
+ 2、移动端事件分为两种
+ touch：单手指事件模型
+ touchstart touchmove touchend touchcancel
+gesture：多手指操作事件模型
+ gesturestart  gesturechange gestureend gesturecancel
+
+我们平时单击、双击、点击、长按、滑动（四个方向滑动）、缩放、旋转、拖拽..等操作都是以上事件模拟出来的效果
+
+3、移动端常用的事件类库
+zepto中提供了移动端常用是事件
+tap、singleTap（300ms）、doubleTap、longTap（750ms）
+swipe、swipeLeft/Right/Up/Down
+pinchIn、pinchOut...
+FastClick：解决click的300ms延迟的
+touch.min.js：百度云手势事件库（百度停止维护）
+
+长按思想：单击不放手750ms就算长按！

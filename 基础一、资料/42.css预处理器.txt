@@ -1,0 +1,187 @@
+css预处理器
+css是标记语言，不是编程语言，所以不具备编程语言的特点，（编程语言的特点，变量存储、判断和循环的逻辑操作、函数的封装继承和多态...），如果具备以上编程语言的特点，开发css的时候将会非常的方便
+css预处理编译语言的宗旨就是把css变成编程语言来开发，提高开发效率，实现组件化的封装
+less
+sass
+stylus
+...
+之所以叫做预编译语言是因为：我们使用上述语言编写完成的样式代码，浏览器不能识别，我们需要把代码编译成为正常能识别的css代码才可以，所以叫做预编译
+
+【导入js编译】
+1.首先导入我们需要的less文件，重点记住rel='stylesheet/less'
+2.导入less-2.5.3.min.js，它会自动去识别rel='stylesheet/less'中的文件，把less编译成正常的css，然后再进行页面的渲染    
+<link rel="stylesheet/less" href="css/temp.less">
+    <script src="js/less-2.5.3.min.js"></script>
+
+开发的时候我们可以这样处理 ，但是项目上线的时候，我们不用这种方式（使用这种方式耗性能：用户访问页面需要把less现编译成css才可以渲染，耽误页面渲染时间），项目上线我们引入的肯定是已经编译完成的css文件
+
+【编译工具】
+http://tool.oschina.net/less
+http://koala-app.com/(KOALA)
+
+【基于NODE编译】
+1.需要先把node安装上
+2.在node全局环境中安装less
+npm install less -g
+npm install --global less
+出现了lessc.cmd 我们就能使用lessc这个命令了
+命令名称是lessc
+3.找到less所在的目录，在这个目录中编译less文件即可
+1）在当前目录下打开DOS命令
+当前目录下，shift+鼠标右键，在此处打开命令窗口
+在当前目录的地址栏中输入cmd即可
+通过DOS命令中的cs命令进入
+2）编译文件
+lessc xxx.less xxx.min.css -x把less文件代码进行编译，并且把编译后的结果进行压缩
+
+
+less的基础语法：
+http://lesscss.cn/ 
+变量：
+@color:red;
+.box{
+  background:@color;}
+@h:100;
+@p:20;
+.box{
+  padding:unit(@p,px);
+  width: unit((@h)-(@p*2),px);
+  height:unit((@h)-(@p*2),px);
+}
+【作用域和层级嵌套】
+@h:100;
+.box{.progress{
+@h:200;
+a{
+height:unit(@h,px);
+}}}=>.box .progress a{height:200px;}
+
+.box {
+2.  a {
+3.    &:hover {
+4.      background: red;
+5.    }
+6.    &.bg {
+7.      background: grey;
+8.    }
+9.    & > span {
+10.      background: orange;
+11.    }
+12.  }
+13.}
+14.
+15./*output*/
+16..box a:hover {
+17.    background: red;
+18.}
+19..box a.bg {
+20.    background: grey;
+21.}
+22..box a > span {
+23.    background: orange;
+24.}
+25./*&连字符：在当前选择器后面直接加上想要链接的内容*/
+【函数】
+.box{
+2.    width:100px;
+3.    height:100px;
+4.}
+5..mark{
+6.    .box;
+7.    background:red;
+8.}
+9.
+10./*output*/
+11..box {
+12.    width: 100px;
+13.    height: 100px;
+14.}
+15..mark {
+16.    width: 100px;
+17.    height: 100px;
+18.    background: red;
+19.}
+
+.box{
+2.    width:100px;
+3.    height:100px;
+4.}
+5..mark:extend(.box){
+6.    background:red;
+7.}
+8./*output*/
+9..box,
+10..mark {
+11.    width: 100px;
+12.    height: 100px;
+13.}
+14..mark {
+15.    background: red;
+16.}
+
+.transition(@property:all,@duration:1s,@timing-function:linear,@delay:0s) {
+2.  -webkit-transition: @arguments;
+3.  -moz-transition: @arguments;
+4.  -ms-transition: @arguments;
+5.  -o-transition: @arguments;
+6.  transition: @arguments;
+7.}
+8..box {
+9.  .transition;
+10.}
+11..box {
+12.  .transition(@duration: .5s);
+13.}
+14..box {
+15.  .transition(@duration: .5s,@delay: 1s);
+16.}
+17..box {
+18.  .transition(all, 1s, linear, 0s);
+19.}
+
+
+【提供一些方法】
+
+.box {
+2.  a {
+3.    @c: red;
+4.    background: @c;
+5.
+6.    &:hover {
+7.      /*darken:加深  lighten:变浅*/
+8.      background: darken(@c, 15%);
+9.      background: lighten(@c, 15%);
+10.    }
+11.  }
+12.}
+
+
+【导入所依赖的文件】
+
+/*在当前文件中导入public,编译的时候会把public中的代码也编译*/
+2.@import "public";
+3.
+4./*在当前文件中导入public,编译的时候不会编译public中的代码，只是导入*/
+5.@import (reference) "public";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    EventFire.prototype.on=function () {
+        if(!this[type+"pool"]){
+            this[type+"pool"]=[];
+        }
+        var ary=this[type+"pool"];
+        for (var i = 0; i < ary.length; i++) {
+            if(fn===ary[i])return;
+        }
+        ary.push(fn);
+    }
+    EventFire.prototype.fire =function (type) {
+        var ary=this[type+"pool"];
+        for (var i = 0; i < ary.length; i++) {
+            if(typeof  ary[i]==="function"){
+                ary[i]();
+            }
+        }
+    }
+    EventFire.prototype.off=function (type.fn) {
+        var ary=this[type+"pool"];
+        for (var i = 0; i < ary.length; i++) {
+            if(ary[i]===fn){
+                ary[i]=null;
+                break;
+            }
+        }
+    }
+</script>
+</body>
+</html>

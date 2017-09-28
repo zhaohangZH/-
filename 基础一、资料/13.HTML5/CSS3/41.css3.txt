@@ -1,0 +1,85 @@
+CSS3
+css第三个版本，在传统的css的基础上新增加很多的属性和内容
+新增选择器
+   结构伪类选择器：nth-child、nth-last-child、nth-of-type、nth-last-of-type、:not...
+   目标伪类选择器：target
+   属性选择器:[attr=xxx]、[attr!=xxx]、[attr^=xxx]、[attr$=xxx]、[attr*=xxx]、[attr~=xxx]...
+新增一些基本样式属性
+  border-radius
+  box-shadow
+  text-shadow
+对背景的改革
+  background-size
+  background：linear-gradient/radial-gradient...
+  background-clip
+  background-origin
+  background-attachment：fixed（背景图铺在第一屏幕下，页面滚动背景图始终定位在当前窗口下）
+transform
+  transform-style：preserve-3d
+  transform-origin
+  translate（X|Y|Z）
+  rotate（X|Y|Z）
+  scale
+  skew
+  matrix...
+transition
+  transition-property：all..
+  transition-duration
+  transition-timing-function：linear、ease、ease-in、ease-out、ease-in-out...
+  transition-delay
+animation
+   @keyframes设置运动的轨迹
+   animation-name 
+   animation-duration 
+   animation-timing-function 
+   animation-delay 
+   animation-iteration-count：infinite无限次
+   animation-fill-mode：forward（运动完成后停留在最后一帧）backward（在延迟等待时间内，元素始终处于当前动画的第一帧位置）both（同时具备以上两个特点）
+   animation-play-state：running、paused
+新盒子模型 
+  box-sizing：border-box、content-box
+  columns
+  flexbox
+  @font-face：字体图标(导入外部字体)
+  @media：媒体查询…
+
+viewport
+常用手机的尺寸 
+苹果：320(<=iphone5s)、375(iphone6)、414(iphone6 plus)… 
+安卓：360、480、540、640…
+
+默认情况下手机上的HTML页面宽度默认都是980(1024)的宽度，和手机多宽没有关系
+
+如果想在320的手机上展示980的页面，需要把页面整体缩小大概三倍左右（需要放大自己使用手指缩放）
+1.<meta name="viewport"
+2.content="
+3.    width=device-width, 
+4.    user-scalable=no, 
+5.    initial-scale=1.0, 
+6.    maximum-scale=1.0, 
+7.    minimum-scale=1.0">
+真实项目中我们不想让页面缩小，也不想让用户手指缩放，此时我们需要让HTML页面的宽度和手机宽度保持一致：设置页面的 viewport (layout viewport布局视口) 
+width=device-width：当前HTML页面的宽度等于手机设备的宽度 
+user-scalable=no：禁止用户手指手动缩放 
+initial-scale=1.0/maximum-scale=1.0/minimum-scale=1.0：初始、最大、最小缩放比例都是1:1，也就是当前页面既不会放大也不会缩小(兼容部分安卓机器)
+
+以后编写的HTML页面如果想在手机上访问，必须加 viewport
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

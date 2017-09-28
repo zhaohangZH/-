@@ -1,0 +1,217 @@
+/*
+ * 定时器可以分为两个阶段
+ * 1、设置一个定时器（setInterval/setTimeout），然后再设置一个等待时间（interval）时间因子）接下来等待即可
+ * 2、当到达等待的时间后，执行定时器规划的任务（设置定时器，，第一个参数传递的函数就是我们规划的任务）
+ */
+//var obj={name:'zhaohang'};
+//setTimeval(function () {
+//->this=>window
+//},1000);
+
+var obj={name:'zhaohang'};
+setTimeval(function () {
+    //->this=>obj;
+}.bind(obj),1000);//=>bind:预先把函数中的this修改为obj，当定时器到达指定的时间后，执行这个函数，this也就是obj了（IE6~8下不兼容）
+
+//->setTimeout:到达指定时间执行一次函数，执行完成后，当前的定时器就没用了
+//->setInterval:到达指定的时间先把函数执行一次，但是此时定时器并没有失去它的作用，以后每周隔这么长的时间，当前的函数都会重新执行一次，除非手动清除当前的定时器
+
+//->clearInterval/clearTimeout([NUM])：通过定时器的排队号清除指定的定时器,而且不管是用哪个定时器设置的,任意一个清除方法,只要把排队号指定好,都可以把定时器清除掉,比如：用setInterval设置的定时器，使用clearTimeout也可以把其清除掉(不推荐这样用)
+
+//==>我们给定时器设置一个时间,到达时间定时器一定执行了吗?
+//答案：不一定
+//->设置一个定时器,总要等一段时间再执行,此阶段我们不等,继续执行下面的任务,但是由于JS的单线程的,一次只能处理一件事情,下面的任务没完成,不管定时器是否到达设定的时间,也要把下面任务彻底完成后,才能反过头执行定时器里面的内容
+// var n = 12;
+// // var sTime = new Date();
+// setTimeout(function () {
+//     // var endTime = new Date();
+//     // console.log(endTime - sTime);//->测试最小的反应时间
+//
+//     console.log(++n);//->2) 13
+// }, 0);
+//
+// // var starTime = new Date();
+// for (var i = 0; i < 100000000; i++) {
+//
+// }
+// // var endTime = new Date();
+// // console.log(endTime - starTime); //->通过性能测试，我们发现在谷歌下循环一亿次大概需要300MS左右
+// console.log(n);//->1) 12
+
+
+//->一次都不会输出,因为执行死循环后,当前的浏览器就再也做不了其它的事情了(JS是单线程的)
+// var n = 12;
+// setTimeout(function () {
+//     console.log(++n);
+// }, 0);
+// while (1 === 1) {
+//
+// }
+// console.log(n);
+
+//->当同步的任务彻底完成后,开始看之前设置的定时器是否到时间,到时间的给予执行
+//=>如果有很多的定时器都到时间了,会把最先到达时间的先执行(因为在设置定时器的时候,浏览器会把计时最短的定时器排在队列的前面)
+// setTimeout(function () {
+//     console.log(1);//->第二次
+// }, 100);
+//
+// setTimeout(function () {
+//     console.log(2);//->第一次
+//     for (var i = 0; i < 100000000; i++) {}
+// }, 0);
+//
+// var st = new Date();
+// for (var i = 0; i < 100000000; i++) {}
+// console.log(new Date() - st);// >=300MS
+//
+// setTimeout(function () {
+//     console.log(3);//->第三次
+// }, 10);
+
+
+// setTimeout(function () {
+//     console.log(1);//->第三次
+// }, 100);
+//
+// setTimeout(function () {
+//     console.log(2);//->第一次
+// }, 0);
+//
+// setTimeout(function () {
+//     console.log(3);//->第二次
+// }, 10);
+//
+// var st = new Date();
+// for (var i = 0; i < 100000000; i++) {}
+// console.log(new Date() - st);// >=300MS
+
+
+//-------------------------------
+//=>所有的事件绑定都是异步编程
+// var n = 12;
+// document.body.onclick = function () {
+//     console.log(++n); //->点击的时候才输出13
+// };
+// console.log(n);//->12
+
+// var oImg = new Image;
+// oImg.src = 'http://fanyi.baidu.com/static/translation/img/header/logo_cbfea26.png';
+// oImg.onload = function () {
+//     console.log('OK');//->第二次
+// };
+// console.log('NO');//->第一次
+
+// var oImg = new Image;
+// oImg.src = 'http://img3.imgtn.bdimg.com/it/u=2280528661,1869298878&fm=214&gp=0.jpg';
+// oImg.onload = function () {
+//     console.log('图片加载成功');
+// };
+// oImg.onerror = function () {
+//     console.log('图片加载失败');
+// };
+// console.log('当前图片加载中，客官请稍等~~');
+
+//------------------------------------
+//=>AJAX中我们可以开启异步编程
+// var xhr = new XMLHttpRequest;
+// xhr.open('GET', '地址', false);//->FALSE:同步 TRUE:或者不
+
+//->需求：开始进来输出1，以后每隔1S钟都累加1，到5结束
+// var n = 0;
+// function fn() {
+//     n++;
+//     console.log(n);
+//     if (n >= 5) {
+//         clearInterval(timer);
+//     }
+// }
+// fn();
+// var timer = setInterval(fn, 1000);
+
+//------
+//->使用递归实现当前的需求:setTimeout模拟出setInterval的效果
+//->递归：函数执行的时候,在调用自己执行
+var n = 0,
+    timer = null;
+function fn() {
+    //->执行FN的时候,上一次创建的那个定时器已经没用了,为了节约内存和性能,我们最好把没用的这个定时器给清除掉
+    clearTimeout(timer);//->清除上一次设置的定时器
+
+    console.log(++n);
+    if (n >= 5) {
+        return;
+    }
+    //->arguments.callee:当前函数本身(JS严格模式下不允许使用,所以真正项目中我们基本上不用这个属性)
+    timer = setTimeout(fn, 1000);
+}
+fn();
+
+//->需求：让小球从当前位置运动到右边边界的位置(修改小球的LEFT值即可)
+
+//[步长固定，时间不固定]---------------------
+// var box = document.getElementById('box'),
+//     maxLeft = utils.win('clientWidth') - box.offsetWidth,//->计算出运动目标位置的LEFT值
+//     step = 20,//->步长:每一次走多少距离
+//     interval = 17;//->时间因子:多长时间执行一次运动(频率)
+//
+// var timer = setInterval(function () {
+//     var curL = utils.css(box, 'left');
+//     curL += step;
+//     utils.css(box, 'left', curL);
+//     if (curL >= maxLeft) {
+//         clearInterval(timer);
+//     }
+// }, interval);
+
+//---------
+//优化一：尽量少用全局的变量
+// var box = document.getElementById('box'),
+//     maxLeft = utils.win('clientWidth') - box.offsetWidth;
+//
+// //->真正项目中我们一般很少会把TIMER设置为全局变量(这样会导致变量冲突:可能一个TIMER代表的是另外的定时器了),我们一般都会把它设置在当前需要运动元素的自定义属性上,这样不仅仅防止了冲突,而且在任何时候如果需要,都可以通过自定义属性的方式获取到(不受闭包循环等干扰)
+// box.timer = setInterval(function () {
+//     var curL = utils.css(box, 'left');
+//     curL += 20;
+//     utils.css(box, 'left', curL);
+//     if (curL >= maxLeft) {
+//         clearInterval(box.timer);
+//     }
+// }, 17);
+
+//-----------------------
+//->优化二
+//->边界判断:真正项目中我们做边界判断,都是首先拿当前位置加上步长,验证一下累加的值是否那会超过边界,如果已经超过边界了,我们就不要在加步长了,而是让元素直接运动到边界的位置即可...
+var box = document.getElementById('box'),
+    maxLeft = utils.win('clientWidth') - box.offsetWidth;
+box.timer = setInterval(function () {
+    var curL = utils.css(box, 'left');
+    //->边界判断:如果我在按照现有步长走一步,就已经超过边界了,此时的我们直接让元素运动到边界位置即可(结束动画)
+    if (curL + 20 >= maxLeft) {
+        utils.css(box, 'left', maxLeft);
+        clearInterval(box.timer);
+        return;
+    }
+    utils.css(box, 'left', curL + 20);
+}, 17);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

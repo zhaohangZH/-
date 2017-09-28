@@ -1,0 +1,137 @@
+回调函数
+//=>回调函数：把一个函数当做实参(值)传递给另外一个正在执行的函数，在另外一个函数执行的过程中，把我们传递的这个回调函数执行
+
+// function fn(num, callBack) {
+//     //->callBack:function () {...}
+//     callBack();
+// }
+// fn(100, function () {});
+
+
+// function fn(num, callBack) {
+//     //->callBack:undefined
+//     //->在让回调函数执行之前,我们最好验证一下它是否是一个函数类型的值,如果是函数类型的是我们在执行,防止报错
+//     // if (typeof callBack === 'function') {
+//     //     callBack();
+//     // }
+//     callBack && callBack();//->一般来说,真实项目中,大家对于callBack只会传递函数或者不传递任何的东西
+// }
+// fn(100);
+
+
+ function fn(num, callBack) {
+     //->传递的回调函数可以在FN中的任何一个位置执行:根据需求来规划即可
+     //->而且我们的回调函数可以根据需求被执行N次
+     for (var i = 0; i < 10; i++) {
+         callBack && callBack();
+     }
+     console.log('FN');
+ }
+ fn(100, function () {
+     console.log('OK');
+ });
+
+
+// function fn(num, callBack) {
+     //->不仅仅能执行,而且还可以把当前函数做任何想做的操作
+     //1、可以给回调函数传递参数值
+     //2、改变回调函数中的THIS
+     callBack && callBack.call(fn, 100, 200);
+ }
+ fn(100, function (a, b) {
+     //->a:100  b:200  this:fn
+     console.log(a, b, this, arguments);
+ });
+
+
+//->执行sort方法的时候,把匿名函数做为回调函数传递给了sort在SORT执行的过程中,把匿名函数也执行了(被执行了N次),并且每一次执行都把数组中的当前项和下一项作为参数传递给这个匿名的回调函数
+// ary.sort(function (a, b) {
+//     return a-b;
+// });
+
+// function fn(num, callBack) {
+//     //->在回调函数的宿主函数(回调函数在哪执行的,它的宿主函数就是谁,此时回调函数的宿主函数是FN)中，我们可以把回调函数执行，而且在宿主函数中可以接受回调函数的返回结果，以此来进行后续的一些操作
+//     var res = callBack(100, 200);
+//     console.log(res);//->300
+// }
+// fn(100, function (a, b) {
+//     return a + b;
+// });
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//->我们都应用过哪些支持回调函数的方法
+  [12, 23, 34, 45].sort(function (a, b) {
+      return a - b;
+  });
+
+  var ary = ['tom', 20],
+      str = 'my name is {0},i am {1} years old';
+  str = str.replace(/\{(\d+)\}/g, function () {
+      return ary[arguments[1]];
+  });
+
+// setInterval(function () {
+// }, 1000);
+// setTimeout(function () {
+// }, 1000);
+
+//->IE6~8下不兼容
+
+var ary=[12,23,34,45];
+ary.forEach(function (item,index,input) {
+    /*1、数组中有几项，我们回调函数就要被执行几次
+    *2、每一次执行都会给回调函数传递三个实参
+    * ->item：当前遍历这一项的值
+    * ->index：当前遍历这一项的索引
+    * ->input：原始遍历的数组  input===ary：true   和原始遍历的数组是同一个数组（用的同一个空间地址），修改input原始的ary也会修改
+    * 3、forEach中的this：
+    * Window（严格模式下是undefined，也就是不知道执行的主体）
+    *
+    * 如果forEach方法在传递第二个实参，第二个实参是谁，相当于把回调函数中的this修改成为谁.
+    *
+    * 4、forEach这个函数本身以及它的回调函数中都不支持return返回值（map是支持的，这也是两者之前的唯一区别）
+     *  */
+    console.log(this);
+})
+
+  var ary = [12, 23, 34, 45, 56];
+  ary.forEach(function (item, index) {
+      //->循环数组中的每一项(数组有几项,回调函数就被执行几次),每一次执行都会把当前数组遍历的这一项以及它的索引传递给回调函数
+      console.log(item, index);
+  });
+  ary = ary.map(function (item, index) {
+      //->遍历的语法和forEach相同,只不过它支持回调函数的返回值(forEach中的回调函数不支持返回值),回调函数中返回的是啥,相当于把数组的当前项替换成啥...
+      return item * 10;
+  });
+  console.log(ary);
+----------------------------------------
+//=>在数组的原型上扩展一个myForEach方法,实现和forEach一模一样的功能(兼容所有的浏览器)
+// Array.prototype.myForEach = function myForEach(callBack, context) {
+//     //->this:我们需要遍历的数组
+//     for (var i = 0; i < this.length; i++) {
+//         var item = this[i],
+//             index = i,
+//             input = this;
+//         //->循环数组中的每一项,都要把回调函数执行一次
+//         //1、需要给回调函数传递三个形参值:item、index、input
+//         //2、需要把回调函数中的THIS指向传递的CONTEXT
+//         callBack && callBack.call(context, item, index, input);
+//     }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

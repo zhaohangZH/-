@@ -1,0 +1,112 @@
+正则的创建有两种方式：
+字面量
+var reg=/^$/img;
+实例创建
+var reg=new RegExp（'^$','img'）;
+
+创建一个正则，正则的规则是str变量存储的值，在这个值的左右两边各有一个@
+  var str = 'zhufeng';
+ //var reg = /@zhufeng@/;//->如果str存储的值变为'piexun'了，我们正则中的zhufeng，也应该是peixun
+ 
+ //---------
+ var reg = new RegExp('@'+str+'@'); //->实例创建方式，第一个参数是一个存放元字符的字符串，我们则可以使用字符串拼接把一个变量的值动态设为正则的规则
+ 
+ //---------不行
+ var reg = /@'+str+'@/;//->让第一个'出现1到多次，让r也出现一到多次...整个本身就不是字符串，何谈字符串拼接  =>字面量创建方式中，斜杠包起来的所有字符都是元字符
+
+
+在使用实例创建的时候，我们在字符串中出现的元字符，有一些比较特殊，\d不是0~9之间的数字，我们应该写成\\d才可以
+ 
+
+
+—–正则实战—— 
+str.replace：替换
+
+此方法一般都是和正则搭配使用的，否则有很多的替换需求根本是无法实现的
+ var str = 'zhufeng2017zhufeng2018';
+ 
+ //------解决不了
+ //->需求：把所有的'zhufeng' 都替换为 'zhufengpeixun'
+ // str = str.replace('zhufeng', 'zhufengpeixun');
+ // str = str.replace('zhufeng', 'zhufengpeixun');
+ // console.log(str);
+ // =>'zhufengpeixun2017zhufeng2018'
+ 
+ //------使用正则
+ str = str.replace(/zhufeng/g, 'zhufengpeixun');
+ console.log(str);
+ //=>'zhufengpeixun2017zhufengpeixun2018'
+[str].replace([reg],[function])
+
+ //-> 首先让[reg]和[str]进行匹配，每当匹配到一次，都会把[function]执行一次
+ 
+ //-> 每当执行[function]的时候，浏览器都会把当前匹配捕获的结果(使用的是exec捕获)作为实参传递给这个函数
+ 
+ //-> 在方法中出现的return后面是啥，都相当于把当前大正则匹配的结果替换成啥
+ 
+ //----举个栗子
+ var str = 'zhu2017feng2018pei2019xun2020';
+ var reg = /\d+/g;
+ str = str.replace(reg, function () {
+     //console.log('ok');//->'ok'*4
+     //=>正则匹配了四次,我们传递的函数也执行了四次
+ 
+     //console.log(arguments);
+     //->第一次 ['2017'...]
+     //->第二次 ['2018'...]
+     //->第三次 ['2019'...]
+     //->第四次 ['2020'...]
+     // arguments[0] ->当前本次大正则捕获的内容
+     //=>每当执行这个方法的时候，浏览器都会把使用exec捕获到的结果作为实参传递给这个函数
+ 
+     return '@';
+ });
+ console.log(str);//->'zhu@feng@pei@xun@' 函数中返回的是啥,当前大正则匹配的那个字符串,就被替换成啥了
+
+var str='每月工资：16524'；
+var ary=['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'，'拾']
+
+正则实战
+str.replace：替换
+此方法一般都是个正则搭配使用的，否则有很多的替换需求根本是无法实现的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

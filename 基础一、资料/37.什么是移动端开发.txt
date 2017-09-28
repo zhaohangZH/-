@@ -1,0 +1,78 @@
+移动端开发
+把我们做好的产品放在手机（PAD）上观看=>响应式布局开发
+基于现有的PC端产品做样式和布局的调整，让其在手机端也可以很好的观看（一般情况下PC和移动端公用一套项目）
+PC端和移动端是两套项目，PC就是PC的，不需要响应式，而移动端需要做响应式也是一套单独的项目；
+    基于手机的浏览器输入网址或者扫描二维码访问我们开发的页面
+    在微信/QQ/微博等第三方平台中运行
+    嵌入到自己公司的APP中，(hybrid混合开发模式)
+
+
+
+webapp（H5页面）
+问题：运行在操作系统的浏览器（NODE/webview）中的
+1、H5不能直接的操作手机内部的硬件或者软件（拍照、读取通讯录..），需要所在的宿主环境同意支持才可以
+2、性能没有nativeApp好
+
+
+hybrid混合开发模式
+nativeApp开发一个APP的外壳
+里面的内容基本上都是H5开发的（大公司可能内容有一部分还是安卓和IOS开发的）
+
+HTML5
+HTML的第五套版本，在传统的HTML基础上新增加或者更新了一些新特性
+对语义化标签的处理
+{什么是语义化标签？合理的标签做合理的事情}
+新增加语义化标签：
+对传统标签的语义修改：small（附属细则）、strong（重点朗读）、hr（区域分割线）...
+删除一些标签：font、big...
+以上标签不兼容，不兼容的情况下我们引入HTML5.min.js来处理兼容
+<![if lt IE 9]>
+<script src='js/html5.min.js'></script>
+<![endif]-->
+
+给传统的表单元素新增加了很多的类型
+传统类型：text、password、radio、CheckBox、submit、dutton、reset、file、hidden...
+新增加类型（不兼容IE低版本）：search、email、tel、number、range、color、date...
+新增加类型的优势：
+1、在手机端可以调取出最符合用户输入的键盘（例如：类型是number调取出来的就是数字键盘...）
+2、内置的验证机制（对于邮箱电话类型等，浏览器有内置的正则验证）
+input:valid{合法的}
+input:invalid{非合法的}
+3、提供了强大的功能组件，例如:日历、滑动杆、颜色选择面板等
+4、placeholder属性也是新增加的，默认显示提示文字
+移动端的表单，没有keydown/keyup等事件（因为移动端的键盘是虚拟键盘），我们统一使用input事件来代替上述事件操作
+oInput.addEventListener('input',function(){用户输入的过程中触发这个事件}，false);
+
+新增音视频处理
+音频:audio
+视频:video
+在IE低版本中依然采用传统的flash播放
+真实项目中的音视频播放，我们都是采用别人写好的播放器插件来处理的（兼容video/兼容flash）
+canvas/svg
+一些新兴的API（JS）
+   本地储存：wedStorage（localStorage、sessionStroage）
+   检测地理位置信息的
+   wab scoket
+   wab works
+   离线存储...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

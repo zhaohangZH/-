@@ -1,0 +1,10 @@
+@color:red;
+.box{
+  background:@color;}
+@h:100;
+@p:20;
+.box{
+  padding:unit(@p,px);
+  width: unit((@h)-(@p*2),px);
+  height:unit((@h)-(@p*2),px);
+}

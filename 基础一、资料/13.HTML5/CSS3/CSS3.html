@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        #box{
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color:greenyellow;
+            /*动画过渡，指定属性*/
+            -webkit-transitio: all 2s linear;
+            -moz-transitio: all 2s linear;
+            -ms-transitio: all 2s linear;
+            -o-transitio: all 2s linear;
+            transitio: all 2s linear;
+        }
+        #box.active{
+            /*translate*/
+            /*rotate:旋转*/
+            /*skew:切斜*/
+            /*scale:缩放*/
+            -webkit-transform: translate(200px,200px) rotate(90deg) skew(30deg);
+            transform: translate(200px,200px);
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+</div>
+<script src="utils201708.min.js"></script>
+<script>
+    var oBox=document.getElementById('box');
+    oBox.onclick=function () {
+        utils.addClass('active',oBox);
+    }
+</script>
+</body>
+</html>

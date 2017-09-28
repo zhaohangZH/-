@@ -1,0 +1,208 @@
+继承
+1.call继承（★★★★☆）
+只能让子类的实例继承父类私有的属性和方法
+原理：在创建子类实例的时候，把父类当做普通函数执行，让函数中的this变为当前子类的实例（使用call修改的this），此时在父类函数体中写的this.xxx=xxx这些私有的属性和方法都被子类的实例所占有了；
+弊端：只能继承父类私有的
+ function Parent() {
+     this.x = 100;//这里是私有的
+  }
+  Parent.prototype.getX = function () {//这就是原型，就是公有的
+      console.log(++this.x);
+  };
+  
+  function Child() {
+      //->this:c
+      this.y = 200;
+      //Parent();//->this:window
+      Parent.call(this);//->this:c  c.x=100
+  }
+  Child.prototype.getY = function () {
+      console.log(--this.y);
+  };
+  var c = new Child();
+
+
+2.原型继承（★★★★★）
+父类的私有属性和公有属性方法都被子类继承了，而且都变成子类实例公有的属性和方法
+原来：让子类的原型等于父类的一个实例（父类的实例能够拥有父类私有和公有的属性方法），这样子类的实例也同时拥有父类私有和公有的；但是原型继承和遗传不太一样，遗传是把父类的基因克隆一份到自己身上（call继承就是遗传）而原型继承仅仅是让子类和父类之间建立原型链的链接通道，子类实例所使用的父类的公有方法，依然在父类的原型上，使用的时候只是通过原型链查找找到的；
+弊端：不管父类私有的还是公有的都是子类公有的了
+
+function Parent() {
+      this.x = 100;
+  }
+  Parent.prototype.getX = function () {
+      console.log(++this.x);
+  };
+  
+  function Child() {
+      this.y = 200;
+  }
+  Child.prototype = new Parent(); //->写在第一步,后续再向子类的原型上增加一些属于自己的属性和方法(防止覆盖原有的属性方法)
+  Child.prototype.constructor = Child;//->防止constructor改变,我们手动增加
+  Child.prototype.getY = function () {
+      console.log(--this.y);
+  };
+  var c = new Child();
+  console.log(c);
+
+
+3.冒充对象继承（★☆☆☆☆）
+
+把父类的实例当做一个普通的对象，遍历循环，把那些属性和方法可以放在子类的任意位置，随你喜好即可=>一般不用
+
+知识点：以后使用for in循环遍历对象的时候，为了防止不遍历那些公有的属性个方法，所有我们写这个循环都这样写
+function Parent() {
+      this.x = 100;
+  }
+  Parent.prototype.getX = function () {
+      console.log(++this.x);
+  };
+  
+  function Child() {
+      //->this:c
+      this.y = 200;
+      var obj = new Parent();
+      // obj
+      //   x:100
+      //   __proto__:
+      //    getX:function...
+      //    constructor:Parent
+      //    __proto__:Object
+
+for (var key in obj){
+//this[key] = obj[key];//->把父类私有的和公有的都变为子类私有的属性和方法(遗传式继承:把父类东西克隆一份过来,继承后子类和父类没啥关系)
+          //Child.prototype[key] = obj[key];//->都变为子类公有的
+  
+          //->私有的是私有的,公有的是公有的
+if(obj.hasOwnProperty(key)){{
+            this[key] = obj[key];
+         } else {
+             Child.prototype[key] = obj[key];
+         }
+      }
+  }
+  Child.prototype.getY = function () {
+      console.log(--this.y);
+}}
+var c = new Child();
+for跟for in的区别for不能遍历公有的属性和方法
+for in 循环既可以遍历一个对象私有的属性和方法，也可以遍历部分它原型链上的属性和方法（所有可枚举的都可以遍历，不可枚举的不能遍历）一般内置的属性和方法是不能枚举出来的
+
+4.组合继承（★★★★★）
+call继承+原型继承
+function Parent() {
+      this.x = 100;
+  }
+  Parent.prototype.getX = function () {
+      console.log(++this.x);
+  };
+  function Child() {
+      this.y = 200;
+      Parent.call(this);//->call继承
+  }
+  Child.prototype = new Parent();//->原型继承
+  Child.prototype.constructor = Child;
+  Child.prototype.getY = function () {
+      console.log(--this.y);
+  };
+  var c = new Child();
+  console.log(c);
+
+5.寄生组合式继承（★★★★★★）6颗星
+它是把传统组合式继承中，父类私有的在子类私有和公有上各有一份，这个瑕疵点完善一下
+父类私有的变成子类私有的（遗传式：把私有的克隆一份过来的）
+父类公有的变成子类公有的（非遗传式：让原型链之间建立连接的通道）
+object.create([obj])
+创建一个新的空对象
+让新创建的这个对象的__proto__指向[obj]
+function Parent() {
+      this.x = 100;
+  }
+  Parent.prototype.getX = function () {
+      console.log(++this.x);
+  };
+  function Child() {
+      this.y = 200;
+      Parent.call(this);//->call继承
+   }
+   Child.prototype = Object.create(Parent.prototype);
+   // new Parent()
+   //   x : 100
+   //   __proto__:Parent.prototype
+  
+   // Object.create(Parent.prototype)
+   //
+   //     __proto__:Parent.prototype
+ 
+   Child.prototype.constructor = Child;
+   Child.prototype.getY = function () {
+      console.log(--this.y);
+   };
+   var c = new Child();
+   console.log(c);
+
+6.ES6中的继承
+采用的原理就是寄生组合式继承
+class Parent {
+     constructor() {
+         this.x = 100;
+     }
+ 
+     getX() {
+          console.log(++this.x);
+     }
+  }
+ 
+  class Child extends Parent {
+      constructor() {
+          super();//->CALL继承
+          this.y = 200;
+      }
+ 
+      getY() {
+          console.log(--this.y);
+      }
+  }
+  
+  var c = new Child();
+  console.log(c);
+
+7.周氏继承法（中间类继承法）
+不兼容IE，因为使用了__proto__
+ function sum(){
+      //var ary=[].slice.call(arguments);
+  
+      //->arguments.__proto__之前指向的是Object.prototype，不能使用数组中的方法
+ 
+      arguments.__proto__ = Array.prototype;
+  
+      //->arguments.__proto__指向Array.prototype，现在就可以使用数组中的方法了
+      //->Array.prototype.__proto__指向的是Object.prototype
+  
+      //->排序、去头尾、求和、求平均 ...
+      arguments.sort(function(a,b){return a-b;})
+      arguments.pop();
+      arguments.shift();
+      ...
+  }
+  sum(12,23,34,13,24,25);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

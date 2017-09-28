@@ -1,0 +1,176 @@
+﻿【需要背下来的重点】
+
+
+事件对象
+当事件触发的时候，会把绑定的方法执行，不仅执行，而且浏览器还会给这个方法传递一个实参的值（真实项目中我们会定义'e/ev'的形参变量接收）
+
+ document.body.onclick = function (e) {
+     console.dir(e);
+ ->MouseEvent：鼠标事件对象(MouseEvent这个类的一个实例)
+  标准浏览器：MouseEvent
+  IE浏览器：PointerEvent
+ 实例（私有属性走势）->MouseEvent.prototype->UIEvent.prototype->Event.prototype->Object.prototype
+
+ Event.prototype
+ ->CAPTURING_PHASE:1 (捕获阶段)
+ ->AT_TARGET:2 (目标位置)
+ ->BUBBLING_PHASE:3 (冒泡阶段)
+
+鼠标事件对象中常用的一些属性
+1、clientX/clientY（兼容所有浏览器）
+当前鼠标触发点距离当前窗口（不是body：第一屏幕左上角）左上角的X/Y坐标
+2、pageX/pageY（IE6-8没有这个属性）
+当前鼠标触发点距离body左上角的X/Y坐标
+3、type（兼容所有浏览器）
+当前触发事件的类型（例如：'click'）
+4、target（不兼容IE6-8）
+当前操作的事件源（当前鼠标在哪个元素上触发的，那么事件源就是谁，事件的源头）
+在IE6-8中没有target只有srcelement
+5、e.preventDefault这是一个方法（不兼容IE6-8）
+阻止事件的默认行为（例如：A标签点击有跳转的行为，input的默认行为：当在文本框中输入内容的时候，内容填入到文本框中；表单元素输入的时候有记录前面输入内容的默认行为，这些都是浏览器的默认行为（天生自带的行为））
+6、stoPropagation
+阻止事件的冒泡传播
+
+在IE6-8中并不像标准浏览器一样，执行方法的时候传递一个事件对象，IE6-8下什么都没有传递，事件对象无法通过形参获取
+ //document.body.onclick = function (e) {
+ //console.log(arguments.length);//->IE6~8：0
+Window.event:IE6-8中，把我们需要的时间储存在全局的event属性中了，获取的时候到这个属性中取读取
+ //     e = e || window.event;
+由于获取的方式不一样，我们最后获取的结果中兼容性也不一样
+clientX/clientY/type：这些都是兼容的
+1、target
+IE6-8下没有target只有srcelement，所以说我们如果想获取事件源，我们需要按照如下的写法获取
+e.target=e.srcelement；
+2、pageX/pageY
+IE6-8下没有这两个属性
+ e.pageY=e.clientY+(document.documentElement.scrollTop||document.body.scrollTop);
+ e.pageX=e.clientX+(document.documentElement.scrollLeft||document.body.scrollLeft);
+ 3、阻止默认行为
+ IE6-8下没有preventDefault这个方法
+ e.preventDefault?e.preventDefault():e.returnValue=false;
+ 4、阻止冒泡传播
+ IE6-8下没有stopPropagation这个方法
+ e.stopPropagation?e.stopPropagation():e.cancelBubble=true;
+
+
+
+document.body.onclick = function (e) {
+     //->IE6~8:让低版本浏览器仿照标准浏览器,把常用的事件对象属性和方法处理兼容了,这样以后按照标准浏览器的属性和方法使用即可
+     if (typeof e === 'undefined') {
+         e = window.event;
+         e.target = e.srcElement;
+         e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+         e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+         e.preventDefault = function () {
+              e.returnValue = false;
+         };
+         e.stopPropagation = function () {
+             e.cancelBubble = true;
+         };
+     }
+      //->以后按照标准浏览器的属性来用即可
+     ...
+ } 
+ //->JQ中的事件对象是JQ已经处理好兼容的,我们直接按照标准的方式来用即可(原理和上面的相同)
+$('body').on('click',function(e){
+e.preventDefault();//->直接按照标准浏览器的属性使用即可（jq完成了兼容的处理）
+})
+
+
+【键盘事件对象】
+
+document.body.onkeyup=function(e){
+    console.log(e);
+};
+/*
+ document.body.onkeyup = function (e) {
+keyboardEvent:键盘事件对象（私有属性原型链）-keyboardEvent-
+1、相对于MouseEvent来说，没有clientX/clientY/pageX/pageY这些属性，其他的属性是存在的（type/target/preventDefault/stopPropagation...）
+2、key
+存储的是当前按下的是哪一个键（例如：'Enter'）
+3、keyCode
+存储的是当前按键的编码（标准浏览器中可以使用which）e.which||e.keyCode
+space：32
+enter：13
+back-space：8
+del：46
+shift：16
+alt：18
+ctrl：17
+alt+tab：9（切换窗口）
+left：37
+up：38
+right：39
+down：40
+ 字母键：65~90 (a-z)
+ 数字键：48~57 (0-9)
+
+ F5：116 (刷新页面)
+ */
+//->阻止页面按F5刷新页面(默认行为)
+document.onkeydown=document.onkeyup=document.onkeypress=function (e) {
+    e = e || window.event;
+     var keyNum = e.which || e.keyCode;
+     if (keyNum === 116) {
+       e.keyCode = 0;//->IE下想要禁止F5,还需要让KEY-CODE为零
+         e.preventDefault ? e.preventDefault() : e.returnValue = false;
+     }
+};
+
+
+//=>推盒子
+var minL = 0,
+    minT = 0,
+    maxL = (document.documentElement.clientWidth || document.body.clientWidth) - box.offsetWidth,
+    maxT = (document.documentElement.clientHeight || document.body.clientHeight) - box.offsetHeight;
+
+document.onkeydown = document.onkeypress = document.onkeyup = function (e) {
+    e = e || window.event;
+    var keyNum = e.which || e.keyCode,
+        curL = utils.css(box, 'left'),
+        curT = utils.css(box, 'top');
+    switch (keyNum) {
+        case 37:
+            curL -= 100;
+            break;
+        case 38:
+            curT -= 100;
+            break;
+        case 39:
+            curL += 100;
+            break;
+        case 40:
+            curT += 100;
+            break;
+    }
+    curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+    curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+
+    zhufengAnimate({
+        curEle: box,
+        target: {
+            left: curL,
+            top: curT
+        },
+        duration: 300
+    });
+
+
+    //->按SPACE键蹦一下
+    if (keyNum === 32) {
+        zhufengAnimate({
+            curEle: box,
+            target: {top: curT - 100},
+            duration: 200,
+            effect: zhufengEffect.Back.easeOut,
+            callBack: function () {
+                zhufengAnimate({
+                    curEle: box,
+                    target: {top: curT + 100},
+                    duration: 200,
+                    effect: zhufengEffect.Bounce.easeOut
+                });
+            }
+        });
+    }
+};

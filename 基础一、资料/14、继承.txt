@@ -1,0 +1,84 @@
+ /*
+    function A() {
+        this.a="a";
+    }
+    function B() {
+        this.b="b";
+        A.call(this);
+    }
+    var b= new B;
+    console.log(b);
+    */
+    function A() {
+        this.a="a";//这里是私有的
+    }
+    A.prototype.getA=function () {}//这就是原型
+    function B() {
+        this.b="b";
+        var objA=new A;
+        for(var key in objA){
+            //this[key]=objA[key]
+            if(objA.hasOwnProperty(key)){
+                this[key]=objA[key]
+            }else {
+                //this.__proto__[key]=objA[key];
+                B.prototype[key]=objA[key]
+            }
+        }
+    }
+    B.prototype.getB=function () {};
+    var b= new B;
+    console.log(b);
+
+    var str="1234";
+    var ary=[1,2,3];
+    console.log(Object.getOwnPropertyDescriptor(str, "length"));
+    console.log(Object.getOwnPropertyDescriptor(ary, "length"));
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  function A() {
+        this.a="a";
+    }
+    A.prototype.getA=function () {};
+    function B() {
+        this.b="b";
+    }
+    B.prototype.getB=function () {};
+    B.prototype=Object.assign(B.prototype,A.prototype);
+    //console.log(Object.assign(B.prototype, A.prototype));
+    var b= new B;
+    console.log(b);
+    //Object.assign(对象B,对象A),将对象A合并到对象B上
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function A() {
+        this.a="a";
+    }
+    A.prototype.getA=function () {};
+    function B() {
+        this.b="b";
+    }
+    B.prototype.getB=function () {};
+    //B.prototype.__proto__=A.prototype;
+    B.prototype=new A;
+    var  b=new B;
+    b.getA;
+    b.__proto__.__proto__.getA
+    b.a;
+    b.__proto__.a
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    function C2(n) {
+        this.x = n
+    };
+    C2.prototype.getX = function () {
+    };
+    var c2 = new C2(1);
+    class C1 {
+        constructor(n) {
+            this.x=n;
+        };
+
+        getX() {};
+        getY(){}
+    }
+    var c1=new C1(2);
+
+    console.log(c1);
